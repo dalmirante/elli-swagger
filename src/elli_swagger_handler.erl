@@ -23,4 +23,6 @@ handle_docs_request('GET', [<<"api-docs">>, Filename]) ->
             {ok, [], {file, "swagger/"++StringFilename}};
         false ->
             {404, [], "Resource Not Found"}
-    end.
+    end;
+handle_docs_request(_Method, _Path) ->
+    ignore.
