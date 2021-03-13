@@ -5,9 +5,6 @@
 -type mimetype() :: atom() | iodata().
 -type http_status_code() :: non_neg_integer().
 
--type swagger_info_field() :: #{title := binary(),
-                                description := binary(),
-                                version => binary()}.
 -type swagger_properties() :: #{iodata() => #{type => iodata(),
                                               description => iodata()}}.
 -type swagger_schema() :: #{type := iodata(),
@@ -19,8 +16,7 @@
                                               produces => [mimetype()],
                                               responses => responses_map() }}.
 -type swagger_paths_field() :: #{path() := path_contents()}.
--type documentation() :: #{info := swagger_info_field(),
-                           paths := swagger_paths_field(),
+-type documentation() :: #{paths := swagger_paths_field(),
                            definitions => #{iodata() => responses_map()},
                            host => binary(),
                            schema => http | https,
