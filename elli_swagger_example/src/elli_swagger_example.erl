@@ -11,13 +11,23 @@ start() ->
                             {mods, [{elli_swagger_handler, []},
                                     {elli_swagger_example, []}]}
                     ],
-    {ok, _} = elli:start_link([{callback, elli_middleware}, {callback_args, CallbackArguments}, {port, 8080}]).
+    {ok, _} = elli:start_link([{callback, elli_middleware}, {callback_args, CallbackArguments}, {port, 8081}]).
 
 documentation() ->
-    Path = #{<<"/echo/{message}">> => #{put => #{summary => <<"Echoes a message back">>,
+    Path = #{<<"/echo/{message}">> => #{get => #{summary => <<"Echoes a message back">>,
                                             description => <<"This call will return the message inserted as echo back to you">>,
+                                            parameters => [#{in => path,
+                                                            name => message,
+                                                            required => true,
+                                                            schema => #{
+                                                                example => <<"hello">>,
+                                                                type => <<"string">>
+                                                            },
+                                                            description => <<"The message you want to be echoed">>}],
                                             responses => #{200 => #{description => <<"Ok">>,
-                                                                    type => string}}}}},
+                                                                    content => #{<<"text/plain">> => #{
+                                                                                    schema => #{type => <<"string">>}}}}},
+                                            tags => [<<"message">>]}}},
     #{paths => Path}.
 
 handle(Req, _Config) ->
@@ -28,4 +38,4 @@ handle(Req, _Config) ->
 handle_event(_Event, _, _) -> ignore.
 
 handle_request('GET', [<<"echo">>, EchoMsg]) ->
-    {ok, [], EchoMsg}.
+    {ok, [{<<"Content-Type">>, <<"text/plain">>}], EchoMsg}.
