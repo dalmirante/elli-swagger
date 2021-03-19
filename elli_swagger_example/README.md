@@ -1,9 +1,9 @@
 elli_swagger_example
 =====
 
-An OTP application
-
-Build
+How to run?
 -----
+    $ rebar3 release
+    $ _build/default/rel/elli_swagger_example/bin/elli_swagger_example console
 
-    $ rebar3 compile
+You can now open your browser at http://localhost:8080/api-docs and see a Swagger documentation.
