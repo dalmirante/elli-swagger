@@ -7,11 +7,7 @@
 -export([documentation/0]).
 
 start() ->
-    CallbackArguments = [
-                            {mods, [{elli_swagger_handler, []},
-                                    {elli_swagger_example, []}]}
-                    ],
-    {ok, _} = elli:start_link([{callback, elli_middleware}, {callback_args, CallbackArguments}, {port, 8081}]).
+    {ok, _} = elli_swagger:start([{elli_swagger_example, []}], 8080).
 
 documentation() ->
     Path = #{<<"/echo/{message}">> => #{get => #{summary => <<"Echoes a message back">>,
@@ -24,10 +20,10 @@ documentation() ->
                                                                 type => <<"string">>
                                                             },
                                                             description => <<"The message you want to be echoed">>}],
+                                            produces => [<<"text/html">>],
                                             responses => #{200 => #{description => <<"Ok">>,
-                                                                    content => #{<<"text/plain">> => #{
-                                                                                    schema => #{type => <<"string">>}}}}},
-                                            tags => [<<"message">>]}}},
+                                                                    schema => #{type => <<"string">>}}}
+                                            }}},
     #{paths => Path}.
 
 handle(Req, _Config) ->
@@ -38,4 +34,4 @@ handle(Req, _Config) ->
 handle_event(_Event, _, _) -> ignore.
 
 handle_request('GET', [<<"echo">>, EchoMsg]) ->
-    {ok, [{<<"Content-Type">>, <<"text/plain">>}], EchoMsg}.
+    {ok, [], EchoMsg}.
