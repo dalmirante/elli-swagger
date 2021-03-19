@@ -1,6 +1,12 @@
 -module(elli_swagger).
 
 -export([get_json_documentation/0]).
+-export([start/2]).
+
+start(ElliHandlers, Port) ->
+    ElliHandlerWithSwagger = [{elli_swagger_handler, []}|ElliHandlers],
+    ElliMiddlewareArgs = [{mods, ElliHandlerWithSwagger}],
+    elli:start_link([{callback, elli_middleware}, {callback_args, ElliMiddlewareArgs}, {port, Port}]).
 
 get_json_documentation() ->
     Callback = application:get_env(elli_swagger, elli_swagger_documentation_callback, undefined),
