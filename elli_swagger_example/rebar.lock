@@ -2,7 +2,7 @@
 [{<<"elli">>,{pkg,<<"elli">>,<<"3.3.0">>},0},
  {<<"elli_swagger">>,
   {git,"https://github.com/DarkGV/elli-swagger",
-       {ref,"511b621b16bdc2b73800bde5cf0885de4387834b"}},
+       {ref,"ba23a0e322d538eb6a13c0e24becd162d3103c98"}},
   0},
  {<<"jsx">>,{pkg,<<"jsx">>,<<"3.0.0">>},1},
  {<<"recon">>,{pkg,<<"recon">>,<<"2.5.1">>},0}]}.
