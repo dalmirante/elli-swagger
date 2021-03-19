@@ -1,5 +1,5 @@
 {application, elli_swagger,
- [{description, "An OTP application"},
+ [{description, "A swagger middleware for elli"},
   {vsn, "0.1.1"},
   {registered, []},
   {mod, {elli_swagger, []}},
