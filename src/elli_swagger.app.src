@@ -1,15 +1,18 @@
 {application, elli_swagger,
  [{description, "An OTP application"},
-  {vsn, "0.1.0"},
+  {vsn, "0.1.1"},
   {registered, []},
   {mod, {elli_swagger, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    elli,
+    jsx
    ]},
   {env,[]},
   {modules, []},
 
   {licenses, ["Apache 2.0"]},
-  {links, []}
+  {links, [{"Github", "https://github.com/DarkGV/elli-swagger"},
+           {"Example", "https://github.com/DarkGV/elli-swagger/tree/master/elli_swagger_example"}]}
  ]}.
