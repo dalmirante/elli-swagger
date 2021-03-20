@@ -49,4 +49,4 @@ Feel free to contribute to this project with opening an issue or opening a pull 
 
 License
 ---
-MIT
+Apache 2.0
