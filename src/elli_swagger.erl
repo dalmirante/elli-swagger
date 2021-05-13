@@ -1,7 +1,7 @@
 -module(elli_swagger).
 
--export([start/1,
-         start/2]).
+-export([start_link/1,
+         start_link/2]).
 
 -type path() :: iodata().
 -type http_method() :: atom().
@@ -29,10 +29,10 @@
 
 -export_type([elli_swagger_t/0]).
 
-start(Modules) ->
+start_link(Modules) ->
     start(Modules, 8080, #{}).
 
-start(Modules, Port) ->
+start_link(Modules, Port) ->
     start(Modules, Port, #{}).
 
 start([], Port, Acc) ->
