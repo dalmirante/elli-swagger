@@ -7,7 +7,7 @@
 -export([elli_swagger_config/0]).
 
 start() ->
-    {ok, _} = elli_swagger:start([?MODULE], 8080).
+    {ok, _} = elli_swagger:start_link([?MODULE], 8080).
 
 elli_swagger_config() ->
     Metadata =  #{get => #{summary => <<"Echoes a message back">>,
