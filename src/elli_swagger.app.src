@@ -1,6 +1,6 @@
 {application, elli_swagger,
  [{description, "A swagger middleware for elli"},
-  {vsn, "0.1.1"},
+  {vsn, "0.2.0"},
   {registered, []},
   {mod, {elli_swagger, []}},
   {applications,
