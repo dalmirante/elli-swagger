@@ -12,12 +12,7 @@ handle(Req, PathConfig) ->
     Method = elli_request:method(Req),
     Path = elli_request:path(Req),
 
-    case handle_docs_request(Method, Path, PathConfig) of
-        {Module, Args} ->
-            Module:handle(Req, Args);
-        Response ->
-            Response
-    end.
+    handle_docs_request(Method, Path, PathConfig).
 
 handle_event(_Atom, _Req, _Config) ->
     ignore.
@@ -35,28 +30,8 @@ handle_docs_request('GET', [<<"api-docs">>, Filename], _PathConfiguration) ->
         false ->
             {404, [], ?NOT_FOUND_MESSAGE}
     end;
-handle_docs_request(_Method, Path, PathConfiguration) ->
-    get_module_to_redirect(Path, PathConfiguration).
-
-get_module_to_redirect(Path, PathConfiguration) ->
-    maps:fold(fun(Key, #{handler := CallbackHandler, arguments := Args}, Arg) ->
-                case length(Key) =:= length(Path)
-                     andalso is_allowed_path(Path, Key, true) of
-                    true -> {CallbackHandler, Args};
-                    false -> Arg
-                end
-              end, {404, [], ?NOT_FOUND_MESSAGE}, PathConfiguration).
-
-is_allowed_path([], [], Allowed) ->
-    Allowed;
-is_allowed_path([KeyValue|Keys], [PathValue|Values], Allowed) ->
-    ShouldAllow =
-        case KeyValue =:= PathValue
-             orelse binary:match(PathValue, <<"{">>) of
-            nomatch -> false;
-            _ -> true
-        end,
-    is_allowed_path(Keys, Values, Allowed and ShouldAllow).
+handle_docs_request(_Method, _Path, _PathConfiguration) ->
+    ignore. % Redirect to some other module
 
 fetch_documentation_from_configuration(PathConfiguration) ->
     SwaggerMetadata = application:get_env(elli_swagger,

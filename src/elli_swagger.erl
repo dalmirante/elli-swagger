@@ -1,7 +1,6 @@
 -module(elli_swagger).
 
--export([start_link/1,
-         start_link/2]).
+-export([start_link/1]).
 
 -type path() :: iodata().
 -type http_method() :: atom().
@@ -29,22 +28,22 @@
 
 -export_type([elli_swagger_t/0]).
 
-start_link(Modules) ->
-    start(Modules, 8080, #{}).
+start_link(ElliOptions) ->
+    Modules = proplists:get_all_values(callback, ElliOptions),
+    ElliConfiguration = proplists:delete(callback, ElliOptions),
+    {ElliSwaggerConfiguration, ElliMiddlewareConfig} = start(Modules, {#{}, []}),
+    start_elli(ElliSwaggerConfiguration, ElliMiddlewareConfig, ElliConfiguration).
 
-start_link(Modules, Port) ->
-    start(Modules, Port, #{}).
-
-start([], Port, Acc) ->
-    start_elli(Acc, Port);
-start([Module|Modules], Port, Acc) ->
+start([], Acc) ->
+    Acc;
+start([Module|Modules], {MapAcc, ModulesAcc}) ->
     ElliSwaggerConfiguration = Module:elli_swagger_config(),
-    start(Modules, Port, update_configuration_map(ElliSwaggerConfiguration, Acc)).
+    start(Modules,  {update_configuration_map(ElliSwaggerConfiguration, MapAcc), [{Module, []} | ModulesAcc]}).
 
 
-start_elli(Metadata, Port) ->
-    ElliMiddleware = [{mods, [{elli_swagger_handler, Metadata}]}],
-    elli:start_link([{callback, elli_middleware}, {callback_args, ElliMiddleware}, {port, Port}]).
+start_elli(Metadata, ElliMiddlewareConfig, ElliConfiguration) ->
+    ElliMiddleware = [{mods, [{elli_swagger_handler, Metadata}|ElliMiddlewareConfig]}],
+    elli:start_link([{callback, elli_middleware}, {callback_args, ElliMiddleware}] ++ ElliConfiguration).
 
 update_configuration_map([], Acc) ->
     Acc;
