@@ -24,7 +24,7 @@ elli_swagger_config() ->
                            responses => #{200 => #{description => <<"Ok">>,
                                                    schema => #{type => <<"string">>}}}
                         }},
-    [{<<"/echo/{echo_message}">>, ?MODULE, [], Metadata}].
+    [{<<"/echo/{echo_message}">>, Metadata}].
 
 handle(Req, _Config) ->
     Request = elli_request:method(Req),

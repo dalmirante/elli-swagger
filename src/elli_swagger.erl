@@ -29,17 +29,20 @@
 -export_type([elli_swagger_t/0]).
 
 start_link(ElliOptions) ->
-    Modules = proplists:get_all_values(callback, ElliOptions),
-    ElliConfiguration = proplists:delete(callback, ElliOptions),
-    {ElliSwaggerConfiguration, ElliMiddlewareConfig} = start(Modules, {#{}, []}),
-    start_elli(ElliSwaggerConfiguration, ElliMiddlewareConfig, ElliConfiguration).
+    CallbackModule = proplists:get_value(callback, ElliOptions),
+    CallbackArgs = proplists:get_value(callback_args, ElliOptions),
+    ElliConfiguration = delete_keys([callback, callback_args], ElliOptions),
 
-start([], Acc) ->
-    Acc;
-start([Module|Modules], {MapAcc, ModulesAcc}) ->
-    ElliSwaggerConfiguration = Module:elli_swagger_config(),
-    start(Modules,  {update_configuration_map(ElliSwaggerConfiguration, MapAcc), [{Module, []} | ModulesAcc]}).
+    ElliSwaggerPaths = CallbackModule:elli_swagger_config(),
+    ElliSwaggerConfiguration = update_configuration_map(ElliSwaggerPaths, #{}),
 
+    start_elli(ElliSwaggerConfiguration, [{CallbackModule, CallbackArgs}], ElliConfiguration).
+
+delete_keys([], FinalList) ->
+    FinalList;
+delete_keys([Key|KeysList], List) ->
+    NewList = lists:keydelete(Key, 1, List),
+    delete_keys(KeysList, NewList).
 
 start_elli(Metadata, ElliMiddlewareConfig, ElliConfiguration) ->
     ElliMiddleware = [{mods, [{elli_swagger_handler, Metadata}|ElliMiddlewareConfig]}],
@@ -47,8 +50,6 @@ start_elli(Metadata, ElliMiddlewareConfig, ElliConfiguration) ->
 
 update_configuration_map([], Acc) ->
     Acc;
-update_configuration_map([{Path, Handler, Arguments, Metadata} | Configurations], Acc) ->
+update_configuration_map([{Path, Metadata} | Configurations], Acc) ->
     PathKey = binary:split(Path, <<"/">>, [global, trim_all]),
-    update_configuration_map(Configurations, Acc#{PathKey => #{handler => Handler,
-                                                               arguments => Arguments,
-                                                               metadata => Metadata}}).
+    update_configuration_map(Configurations, Acc#{PathKey => Metadata}).
