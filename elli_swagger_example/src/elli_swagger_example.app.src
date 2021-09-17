@@ -5,7 +5,8 @@
   {mod, {elli_swagger_example_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    elli_swagger
    ]},
   {env,[]},
   {modules, []},
