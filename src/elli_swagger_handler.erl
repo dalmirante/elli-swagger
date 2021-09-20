@@ -5,6 +5,7 @@
 -export([handle/2, handle_event/3]).
 
 -callback elli_swagger_config() -> elli_swagger:elli_swagger_t().
+-optional_callbacks([elli_swagger_config/0]).
 
 %% elli
 handle(Req, PathConfig) ->

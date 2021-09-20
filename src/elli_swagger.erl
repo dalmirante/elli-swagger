@@ -33,7 +33,11 @@ start_link(ElliOptions) ->
     CallbackArgs = proplists:get_value(callback_args, ElliOptions),
     ElliConfiguration = delete_keys([callback, callback_args], ElliOptions),
 
-    ElliSwaggerPaths = CallbackModule:elli_swagger_config(),
+    ElliSwaggerPaths =
+        case lists:member({elli_swagger_config, 0}, CallbackModule:module_info(exports)) of
+            true -> CallbackModule:elli_swagger_config();
+            false -> []
+        end,
     ElliSwaggerConfiguration = update_configuration_map(ElliSwaggerPaths, #{}),
 
     start_elli(ElliSwaggerConfiguration, [{CallbackModule, CallbackArgs}], ElliConfiguration).
