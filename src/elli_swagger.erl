@@ -24,7 +24,7 @@
                            schema => http | https,
                            basePath => binary()}.
 
--type elli_swagger_t() :: {binary(), term(), module(), documentation()}.
+-type elli_swagger_t() :: [{binary(), documentation()}].
 
 -export_type([elli_swagger_t/0]).
 
