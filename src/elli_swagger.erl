@@ -26,6 +26,11 @@
 
 -type elli_swagger_t() :: [{binary(), documentation()}].
 
+%% Elli swagger plugin
+
+init(State0) ->
+    io:fwrite("The plugin worked as a charm!").
+
 -export_type([elli_swagger_t/0]).
 
 start_link(ElliOptions) ->
